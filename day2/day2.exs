@@ -2,6 +2,9 @@
 # 12 red cubes
 # 13 green cubes
 # 14 blue cubes
+
+# Fewest number of cubes of each color
+
 defmodule FileProcessor do
   def process_file(file_path) do
 
@@ -12,7 +15,7 @@ defmodule FileProcessor do
       |> Enum.reduce({:total, 0}, fn result, agg ->
         case agg do
           {:total, total} ->
-            case sum_total(result) do
+            case max_power(result) do
               {:ok, result_total} -> {:total, total + result_total}
               other -> other
             end
@@ -26,18 +29,12 @@ defmodule FileProcessor do
     end
   end
 
-  defp sum_total({:ok, game, selections}) do
-    if Enum.all?(selections, fn %{green: green, red: red, blue: blue} ->
-      green <= 13 and red <= 12 and blue <= 14
-    end) do
-      {:ok, game}
-    else
-      {:ok, 0}
-    end
-  end
-
-  defp sum_total(other) do
-    other
+  defp max_power({:ok, _, selections}) do
+    selections
+    |> Enum.reduce(%{green: 0, red: 0, blue: 0}, fn %{green: green, red: red, blue: blue}, %{green: max_green, red: max_red, blue: max_blue} ->
+      %{green: max(green, max_green), red: max(red, max_red), blue: max(blue, max_blue)}
+    end)
+    |> Kernel.then(fn %{green: green, red: red, blue: blue} -> {:ok, green*red*blue} end)
   end
 
   defp process_line(line) do
