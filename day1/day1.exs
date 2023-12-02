@@ -2,7 +2,7 @@
 # first digit
 # last digit (in that order) to form a single two-digit number.
 
-# In example, the calibration values of the four lines are 12, 38, 15, and 77. Adding these together produces 142.
+# In the example, the calibration values of the four lines are 12, 38, 15, and 77. Adding these together produces 142.
 
 defmodule FileProcessor do
   def process_file(file_path) do
@@ -107,7 +107,6 @@ defmodule FileProcessor do
     end
   end
 
-  # Placeholder for the try_find_number_word function
   defp try_find_number_word(part, element) do
     case try_find_number_word(part <> element) do
       {:ok, number} -> {:ok, number}
@@ -119,32 +118,30 @@ defmodule FileProcessor do
   defp try_find_number_word(word) do
     # IO.puts("\t#{word}")
 
-    number_words = [
-      "one", "two", "three", "four", "five", "six", "seven", "eight", "nine",
-      "eno", "owt", "eerht", "ruof", "evif", "xis", "neves", "thgie", "enin"
-    ]
+    number_words = %{
+      "one" => 1,
+      "two" => 2,
+      "three" => 3,
+      "four" => 4,
+      "five" => 5,
+      "six" => 6,
+      "seven" => 7,
+      "eight" => 8,
+      "nine" => 9,
+      "eno" => 1,
+      "owt" => 2,
+      "eerht" => 3,
+      "ruof" => 4,
+      "evif" => 5,
+      "xis" => 6,
+      "neves" => 7,
+      "thgie" => 8,
+      "enin" => 9
+    }
 
-    case word do
-      "one" -> {:ok, 1}
-      "two" -> {:ok, 2}
-      "three" -> {:ok, 3}
-      "four" -> {:ok, 4}
-      "five" -> {:ok, 5}
-      "six" -> {:ok, 6}
-      "seven" -> {:ok, 7}
-      "eight" -> {:ok, 8}
-      "nine" -> {:ok, 9}
-      "eno" -> {:ok, 1}
-      "owt" -> {:ok, 2}
-      "eerht" -> {:ok, 3}
-      "ruof" -> {:ok, 4}
-      "evif" -> {:ok, 5}
-      "xis" -> {:ok, 6}
-      "neves" -> {:ok, 7}
-      "thgie" -> {:ok, 8}
-      "enin" -> {:ok, 9}
-      _ ->
-        if Enum.any?(number_words, fn number_word -> String.starts_with?(number_word, word) end) do
+    case number_words[word] do
+      nil ->
+        if Enum.any?(number_words, fn {number_word, _} -> String.starts_with?(number_word, word) end) do
           {:partial, word}
         else
           case String.length(word) do
@@ -152,6 +149,7 @@ defmodule FileProcessor do
             length -> try_find_number_word(String.slice(word, 1, length - 1))
           end
         end
+      number -> {:ok, number}
     end
   end
 
